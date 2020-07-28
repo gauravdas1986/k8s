@@ -1,21 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    deployment.kubernetes.io/revision: "1"
-  creationTimestamp: "2020-07-28T11:36:14Z"
-  generation: 1
   labels:
     app: callme
   name: callme
   namespace: default
-  resourceVersion: "26221"
-  selfLink: /apis/apps/v1/namespaces/default/deployments/callme
-  uid: 59db1b1e-cc96-47a1-98e2-2a7c70d09b01
 spec:
-  progressDeadlineSeconds: 600
-  replicas: 1
-  revisionHistoryLimit: 10
+  replicas: 2 #CHANGE
+  minReadySeconds: 45
   selector:
     matchLabels:
       app: callme
@@ -26,68 +18,30 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: callme
     spec:
       containers:
-      - image: gcr.io/k8s-springboot/callme:v1
+      - image: gcr.io/k8s-springboot/callme:v1 #CHANGE
         imagePullPolicy: IfNotPresent
         name: callme
-        resources: {}
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
-      dnsPolicy: ClusterFirst
       restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
       terminationGracePeriodSeconds: 30
-status:
-  availableReplicas: 1
-  conditions:
-  - lastTransitionTime: "2020-07-28T11:36:16Z"
-    lastUpdateTime: "2020-07-28T11:36:16Z"
-    message: Deployment has minimum availability.
-    reason: MinimumReplicasAvailable
-    status: "True"
-    type: Available
-  - lastTransitionTime: "2020-07-28T11:36:14Z"
-    lastUpdateTime: "2020-07-28T11:36:16Z"
-    message: ReplicaSet "callme-65985fb68" has successfully progressed.
-    reason: NewReplicaSetAvailable
-    status: "True"
-    type: Progressing
-  observedGeneration: 1
-  readyReplicas: 1
-  replicas: 1
-  updatedReplicas: 1
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: "2020-07-28T11:39:08Z"
-  finalizers:
-  - service.kubernetes.io/load-balancer-cleanup
-  labels:
+  labels: #PODS
     app: callme
   name: callme
   namespace: default
-  resourceVersion: "27086"
-  selfLink: /api/v1/namespaces/default/services/callme
-  uid: cc7c8cca-957e-40d6-9121-abb4237ad765
 spec:
-  clusterIP: 10.0.11.142
-  externalTrafficPolicy: Cluster
   ports:
-  - nodePort: 32116
-    port: 80
+  - # nodePort: 30701 #CHANGE
+    port: 8002 #CHANGE
     protocol: TCP
-    targetPort: 8002
+    targetPort: 8002 #CHANGE
   selector:
     app: callme
-  sessionAffinity: None
+  sessionAffinity: None #CHANGE
   type: LoadBalancer
-status:
-  loadBalancer:
-    ingress:
-    - ip: 34.68.95.114
