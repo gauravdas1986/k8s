@@ -27,7 +27,7 @@ spec:
         name: caller
         env:
           - name: CALLME_SERVICE_URI
-          - value: http://callme
+            value: http://callme
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
 ---
